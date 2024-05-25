@@ -5,8 +5,7 @@ const router = express.Router();
 require("dotenv").config({
     path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
 });
-
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;  // Ajout d'une valeur par défaut
 
 // Middleware to log requests
 app.use((req, res, next) => {
@@ -28,23 +27,24 @@ app.use(
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb", parameterLimit: 50000 }));
 
-//Routes management
-const routes = [
+// Routes management
+const authRoutes = require("./src/features/auth/authRoutes")
 
-];
+app.use('/auth', authRoutes);
 
-routes.forEach((route) => require(route)(app));
-
+// Main route
 router.get("/", (req, res) => {
     res.json({
         success: true,
-        env: "main",
+        env: process.env.NODE_ENV || "development",  // Utilisation de la variable d'environnement
         version: "1.1.0",
     });
 });
 
+app.use("/", router);
+
 // Test route
-app.get('/', (req, res) => {
+app.get('/test', (req, res) => {
     res.send('The server is running! 🏃');
 });
 

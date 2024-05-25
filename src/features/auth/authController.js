@@ -1,76 +1,60 @@
 const AuthService = require("./authService");
 
-exports.signup = async (req, res, next) => {
-    console.log("Request data:", req.body);
+const signup = async (req, res) => {
     try {
         const user = req.body;
         const response = await AuthService.signup(user);
-        res.json('User signed up successfully', response);
-
+        res.status(201).json({ message: 'User signed up successfully', user: response });
     } catch (error) {
-        console.error("Failed to handle signup:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to sign up user' });
     }
 };
 
-
-exports.checkEmail = async (req, res, next) => {
+const checkEmail = async (req, res, next) => {
     try {
         const response = await AuthService.checkEmail(req.query.email);
-        if (response) {
-            res.status(200).send('Mail does not exist in database');
+        if (response.exists) {
+            res.status(409).json({ message: response.message });
         } else {
-            res.status(404).send('User not found');
+            res.status(200).json({ message: response.message });
         }
     } catch (error) {
-        console.error("Failed to handle checkEmail:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to check email' });
     }
 };
 
-exports.login = async (req, res, next) => {
+const login = async (req, res, next) => {
     try {
         const response = await AuthService.login(req.body.userData);
-        if (response) {
-            res.status(200).send('User successfully logged in');
-        } else {
-            res.status(404).send('There is a problem with the username/password combination');
-        }
+        res.status(200).json({ message: 'User successfully logged in', data: response });
     } catch (error) {
-        console.error("Failed to handle login:", error);
-        next(error);
+        res.status(401).json({ error: 'Invalid username/password combination' });
     }
 };
 
-exports.logout = async (req, res, next) => {
+const logout = async (req, res, next) => {
     try {
         const response = await AuthService.logout(req.userId);
         if (response) {
             res.status(200).send('User successfully logged out');
         } else {
-            res.status(404).send('There is a problem logging out the user');
+            res.status(500).send('There is a problem logging out the user');
         }
     } catch (error) {
-        console.error("Failed to handle logout:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to log out user' });
     }
 };
 
-exports.forgotPassword = async (req, res, next) => {
+const forgotPassword = async (req, res, next) => {
     try {
         const response = await AuthService.forgotPassword(req.body.email);
-        if (response) {
-            res.status(200).send('OK');
-        } else {
-            res.status(404).send('Failed to handle forgotPassword');
-        }
+        res.status(200).json({ message: 'OK', data: response });
     } catch (error) {
-        console.error("Failed to handle forgotPassword:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to handle forgotPassword' });
     }
 };
 
-exports.getResetPassword = async (req, res, next) => {
+const getResetPassword = async (req, res, next) => {
     try {
         const response = await AuthService.getResetPassword(req.params);
         if (response) {
@@ -79,40 +63,37 @@ exports.getResetPassword = async (req, res, next) => {
             res.status(404).send('Failed to handle getResetPassword');
         }
     } catch (error) {
-        console.error("Failed to handle getResetPassword:", error);
         next(error);
     }
 };
 
-exports.resetPassword = async (req, res, next) => {
+const resetPassword = async (req, res, next) => {
     try {
-        const response = await AuthService.resetPassword(
-            req.params,
-            req.body.password
-        );
+        const response = await AuthService.resetPassword(req.params, req.body.password);
         if (response) {
             res.status(200).send('Password successfully reset');
         } else {
-            res.status(404).send('Failed to reset password');
+            res.status(500).send('Failed to reset password');
         }
     } catch (error) {
-        console.error("Failed to handle resetPassword:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to reset password' });
     }
-
 };
 
-exports.refreshToken = async (req, res, next) => {
+const refreshToken = async (req, res, next) => {
     try {
         const response = await AuthService.refreshToken(req.body.refreshToken);
         if (response) {
-            res.status(200).send('Token successfully refreshed');
+            res.status(200).json({
+                accessToken: response.accessToken,
+                refreshToken: response.refreshToken
+            });
         } else {
-            res.status(404).send('Failed to reefresh token');
+            res.status(404).json({ error: 'Failed to refresh token' });
         }
     } catch (error) {
-        console.error("Failed to handle refreshToken:", error);
-        next(error);
+        res.status(500).json({ error: 'Failed to refresh token' });
     }
-
 };
+
+module.exports = { signup, checkEmail, login, logout, forgotPassword, getResetPassword, resetPassword, refreshToken };
