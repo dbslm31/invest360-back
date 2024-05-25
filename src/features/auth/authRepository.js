@@ -34,7 +34,7 @@ const createRefreshToken = async (user) => {
 
 const deleteRefreshToken = async (userId) => {
     try {
-        const result = await RefreshToken.destroy({ where: { user_id: userId } });
+        const result = await RefreshToken.destroy({ where: { userId: userId } });
         return result > 0;
     } catch (error) {
         console.error("Error deleting refresh token:", error);

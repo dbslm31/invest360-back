@@ -15,7 +15,7 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
 // Logout
-router.post("/logout", authController.logout);
+router.post("/logout", verifyToken, authController.logout);
 
 // Change password
 router.post("/forgot-password", authController.forgotPassword);

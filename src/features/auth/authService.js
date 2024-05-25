@@ -96,6 +96,7 @@ const login = async (userData) => {
 };
 
 const logout = async (userId) => {
+    console.log('userId in service', userId)
     try {
         const result = await AuthRepository.deleteRefreshToken(userId);
         if (result) {
