@@ -1,25 +1,25 @@
 const db = require('../../database/index');
-const User = db.users;
+const User = db.user;
 
 exports.getAllUsers = async () => {
     return await User.findAll();
 };
 
-exports.getUserById = async (userId) => {
-    return await User.findOne({ where: { id: userId } });
+exports.getUserById = async (id) => {
+    return await User.findOne({ where: { id: id } });
 };
 
 
-exports.updateUser = async (userId, updatedData) => {
-    const user = await User.findOne({ where: { id: userId } });
+exports.updateUser = async (id, updatedData) => {
+    const user = await User.findOne({ where: { id: id } });
     if (!user) {
         throw new Error('Utilisateur non trouvé');
     }
     return await user.update(updatedData);
 };
 
-exports.deleteUser = async (userId) => {
-    const user = await User.findOne({ where: { id: userId } });
+exports.deleteUser = async (id) => {
+    const user = await User.findOne({ where: { id: id } });
     if (!user) {
         throw new Error('Utilisateur non trouvé');
     }

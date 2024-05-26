@@ -29,8 +29,11 @@ app.use(express.urlencoded({ extended: true, limit: "200mb", parameterLimit: 500
 
 // Routes management
 const authRoutes = require("./src/features/auth/authRoutes")
+const userRoutes = require("./src/features/users/userRoutes");
+const { useActionData } = require('react-router-dom');
 
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes)
 
 // Main route
 router.get("/", (req, res) => {
