@@ -4,7 +4,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const AuthRepository = require("./authRepository");
 const config = require("../../config/authConfig");
 const domain = process.env.DOMAIN
-const port = process.env.PORT
+const port = process.env.FRONT_PORT
 
 
 const signup = async (user) => {
