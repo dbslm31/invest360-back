@@ -61,10 +61,10 @@ const checkEmail = async (email) => {
 
 
 const login = async (userData) => {
-    console.log("userData", userData)
+    console.log("userData", userData);
     try {
         const user = await AuthRepository.findUserByEmail(userData.email);
-        console.log('user', user)
+        console.log('user', user);
 
         if (!user) {
             throw new Error("Email is not in the database!");
@@ -95,6 +95,7 @@ const login = async (userData) => {
     }
 };
 
+
 const logout = async (userId) => {
     console.log('userId in service', userId)
     try {
@@ -117,7 +118,7 @@ const forgotPassword = async (email) => {
             throw new Error("User not found");
         }
 
-        const secret = config.jwtSecret + user.password;
+        const secret = config.secret + user.password;
         const token = jwt.sign({ email: user.email, id: user.id }, secret, {
             expiresIn: "24h",
         });

@@ -1,5 +1,6 @@
 const userService = require('./userService');
 
+
 //Fetch all users
 exports.getAllUsers = async (req, res, next) => {
     try {

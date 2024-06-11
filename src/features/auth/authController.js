@@ -25,12 +25,13 @@ const checkEmail = async (req, res, next) => {
 
 const login = async (req, res, next) => {
     try {
-        const response = await AuthService.login(req.body.userData);
+        const response = await AuthService.login(req.body);
         res.status(200).json({ message: 'User successfully logged in', data: response });
     } catch (error) {
         res.status(401).json({ error: 'Invalid username/password combination' });
     }
 };
+
 
 const logout = async (req, res, next) => {
     try {
@@ -47,7 +48,9 @@ const logout = async (req, res, next) => {
 
 const forgotPassword = async (req, res, next) => {
     try {
+
         const response = await AuthService.forgotPassword(req.body.email);
+        console.log('email', email)
         res.status(200).json({ message: 'OK', data: response });
     } catch (error) {
         res.status(500).json({ error: 'Failed to handle forgotPassword' });

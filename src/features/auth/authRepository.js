@@ -56,12 +56,13 @@ const updateUserPassword = async (id, newPassword) => {
 
 const sendResetPasswordEmail = async (email, link) => {
     let transporter = nodemailer.createTransport({
-        host: "smtp.mail.ovh.net",
+        service: "gmail",
+        host: "smtp.gmail.com",
         port: 465,
         secure: true,
         auth: {
-            user: "info@mamossa.com",
-            pass: "EmailMamossa**",
+            user: "benslim.dalila@gmail.com",
+            pass: process.env.APP_PASSWORD,
         },
     });
 
