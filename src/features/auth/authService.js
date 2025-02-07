@@ -61,10 +61,8 @@ const checkEmail = async (email) => {
 
 
 const login = async (userData) => {
-    console.log("userData", userData);
     try {
         const user = await AuthRepository.findUserByEmail(userData.email);
-        console.log('user', user);
 
         if (!user) {
             throw new Error("Email is not in the database!");
@@ -76,7 +74,14 @@ const login = async (userData) => {
             throw new Error("Incorrect password, please try again.");
         }
 
-        const token = jwt.sign({ id: user.id }, config.secret, {
+        const payload = {
+            id: user.id,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname
+        };
+
+        const token = jwt.sign(payload, config.secret, {
             expiresIn: config.jwtExpiration,
         });
 
@@ -85,6 +90,7 @@ const login = async (userData) => {
         return {
             id: user.id,
             email: user.email,
+            firstname: user.firstname,
             accessToken: token,
             refreshToken: refreshToken,
             message: "Successfully logged in!",
@@ -94,6 +100,7 @@ const login = async (userData) => {
         throw error;
     }
 };
+
 
 
 const logout = async (userId) => {

@@ -9,17 +9,13 @@ const ROLES = ["admin", "tenant", "owner"];
 
 const catchError = (err, req, res, next) => {
     if (err instanceof TokenExpiredError) {
-        var io = req.app.get("socketio");
-        io.emit("loggin-status", {
-            message: "Token has expired!",
-            status: false,
-        });
         return res
             .status(401)
-            .send({ message: "Unauthorized Access : Token has expired!" });
+            .send({ message: "Unauthorized Access: Token has expired!" });
     }
-    next(new Error("Unauthorized access : Token is invalid!"));
+    next(new Error("Unauthorized access: Token is invalid!"));
 };
+
 
 const verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
@@ -32,6 +28,9 @@ const verifyToken = (req, res, next) => {
             return catchError(err, req, res, next);
         }
         req.userId = decoded.id;
+        req.firstName = decoded.firstname;
+        req.lastName = decoded.lastname;
+        req.email = decoded.email;
         next();
     });
 };
